@@ -93,8 +93,8 @@ npm start
 Backend (.env)
 
 PORT=5000
-MONGODB_URI=mongodb+srv://username:password@cluster0.yoagdzs.mongodb.net/jwt_auth?retryWrites=true&w=majority
-JWT_SECRET=your_super_secret_jwt_key_change_this_in_production
+"mongodb+srv://username:NEW_PASSWORD@cluster0.yoagdzs.mongodb.net/..."
+JWT_SECRET=your_super_secret_jwt_key
 JWT_EXPIRE=30d
 NODE_ENV=development
 CORS_ORIGIN=<http://localhost:3000>
