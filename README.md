@@ -1,6 +1,5 @@
-# Document Heading
+# 🔐 JWT Authentication System
 
-🔐 JWT Authentication System
 A full-stack JWT authentication system built with React.js frontend and Node.js/Express.js backend, featuring MongoDB Atlas cloud database integration.
 
 <https://img.shields.io/badge/JWT-Authentication-blue>
@@ -70,23 +69,23 @@ cd jwt-auth-project
 
 cd jwt-auth-backend
 
-# Install dependencies
+## Install dependencies (for back-end)
 
 npm install
 
-# Create environment file
+## Create environment file
 
 cp .env.example .env
 
-# Configure environment variables (see below)
+## Configure environment variables (see below)
 
 cd ../jwt-auth-frontend
 
-# Install dependencies
+## Install dependencies (for front-end)
 
 npm install
 
-# Start development server
+## Start development server
 
 npm start
 
