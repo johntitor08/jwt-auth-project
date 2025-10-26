@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Frontend-Backend Connection Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        button { padding: 10px 20px; margin: 10px; font-size: 16px; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { margin: 10px 0; padding: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Frontend to Backend Connection Test</h1>
+    
+    <button onclick="testConnection()">Test Backend Connection</button>
+    <button onclick="testRegistration()">Test Registration</button>
+    <button onclick="testLogin()">Test Login</button>
+    
+    <div id="results"></div>
+
+    <script>
+        const API_URL = 'http://localhost:5000/api/auth';
+        
+        async function testConnection() {
+            try {
+                const response = await fetch('http://localhost:5000/health');
+                const data = await response.json();
+                showResult('✅ Backend connected successfully!', 'success');
+                console.log('Health check:', data);
+            } catch (error) {
+                showResult(`❌ Backend connection failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testRegistration() {
+            const testData = {
+                username: `testuser_${Date.now()}`,
+                email: `test${Date.now()}@example.com`,
+                password: 'password123'
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('✅ Registration successful!', 'success');
+                    console.log('Registration response:', data);
+                    
+                    // Store token for login test
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data));
+                } else {
+                    showResult(`❌ Registration failed: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Registration error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testLogin() {
+            const loginData = {
+                email: 'atlas@example.com',  // Use the user we registered earlier
+                password: 'password123'
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(loginData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('✅ Login successful!', 'success');
+                    console.log('Login response:', data);
+                    
+                    // Store token for profile test
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data));
+                    
+                    // Test protected route
+                    testProfile();
+                } else {
+                    showResult(`❌ Login failed: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Login error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testProfile() {
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                showResult('❌ No token available for profile test', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/profile`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('✅ Profile access successful!', 'success');
+                    console.log('Profile response:', data);
+                } else {
+                    showResult(`❌ Profile access failed: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Profile error: ${error.message}`, 'error');
+            }
+        }
+
+        function showResult(message, type) {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `info ${type}`;
+            div.textContent = message;
+            results.appendChild(div);
+        }
+    </script>
+</body>
+</html>
