@@ -8,6 +8,7 @@ A full-stack JWT authentication system built with React.js frontend and Node.js/
 <https://img.shields.io/badge/Backend-Node.js%252FExpress-green>
 
 ✨ Features
+
 ✅ User Registration & Login
 
 ✅ JWT Token-based Authentication
